@@ -23,8 +23,28 @@
  */
 
 #include <string.h>
+#include<stdio.h>
+#include<math.h>
 #include "ap_int.h"
 #include "action_uppercase.H"
+typedef union { 
+  
+    float f; 
+    struct
+    { 
+  
+        // Order is important. 
+        // Here the members of the union data structure 
+        // use the same memory (32 bits). 
+        // The ordering is taken 
+        // from the LSB to the MSB. 
+  
+        unsigned int mantissa : 23; 
+        unsigned int exponent : 8; 
+        unsigned int sign : 1; 
+  
+    } raw; 
+} myfloat; 
 
 //----------------------------------------------------------------------
 //--- MAIN PROGRAM -----------------------------------------------------
@@ -46,23 +66,97 @@ static int process_action(snap_membus_512_t *din_gmem,
     while (size > 0) {
 //#pragma HLS PIPELINE
 	word_t text;
-	unsigned char i;
+	//unsigned char i;
 
 	/* Limit the number of bytes to process to a 64B word */
 	bytes_to_transfer = MIN(size, BPERDW_512);
 
         /* Read in one word_t */
-	memcpy((char*) text, din_gmem + i_idx, BPERDW_512);
+	memcpy((uint8_t*) text, din_gmem + i_idx, BPERDW_512);
+/*int index=0;
+int k;
+
+for(k=0;k<10;k++){
+if(text[k]==uint8_t('*')){
+	break;//	index++;
+}
+}
+text[0]=(char)(k+48);
+int j=1;
+
+while(k!=0){
+	text[j]=(char)((k%10)+48);//
+	k=k/10;
+j++;
+}
+//text[j]='\0';j++;
+//text[j]='\0';
+*/
 
 	/* Convert lower cases to upper cases byte per byte */
-    uppercase_conversion:
-	for (i = 0; i < sizeof(text); i++ ) {
-//#pragma HLS UNROLL
-	    if (text[i] >= 'a' && text[i] <= 'z')
-		text[i] = text[i] - ('a' - 'A');
-	}
+   myfloat var;
+	unsigned f = 0, i; 
+    for (i = 31; i >= 9; i--) { 
+        f = f + (unsigned int)(text[i]-48) * pow(2, 31 - i); 
+    } 
+    var.raw.mantissa = f; 
+	f = 0; 
+    for (i = 8; i >= 1; i--) { 
+        f = f + (unsigned int)(text[i]-48) * pow(2, 8 - i); 
+    } 
+    var.raw.exponent = f; 
+    var.raw.sign = (unsigned int)(text[0]-48); 
+//memset(text,0,BPERDW_512);
+//word_t text1;
+float num1=var.f;
+   myfloat var1;
+	f = 0; 
+    for (i = 63; i >= 41; i--) { 
+        f = f + (unsigned int)(text[i]-48) * pow(2, 63 - i); 
+    } 
+    var1.raw.mantissa = f; 
+	f = 0; 
+    for (i = 40; i >= 33; i--) { 
+        f = f + (unsigned int)(text[i]-48) * pow(2, 40 - i); 
+    } 
+    var1.raw.exponent = f; 
+    var1.raw.sign = (unsigned int)(text[32]-48); 
+//memset(text,0,BPERDW_512);
+//word_t text1;
 
-	/* Write out one word_t */
+float num2=var1.f;
+float num = num1*num2;
+myfloat var2;
+
+var2.f=num;
+//char text[32];
+memset((char*)text,  'c', BPERDW_512);
+int j=0;
+text[j]=(char)((var2.raw.sign)+48);j++;
+//printf("%c\n",text[0]);
+int n=var2.raw.exponent;
+int k; 
+    for (k = 8 - 1; k >= 0; k--) { 
+  
+        if ((n >> k) & 1) {
+            //printf("1");
+		text[j]='1';j++;} 
+        else{
+//            printf("0"); 
+		text[j]='0';j++; }
+    } 
+
+n=var2.raw.mantissa;
+//int k; 
+    for (k = 23 - 1; k >= 0; k--) { 
+  
+        if ((n >> k) & 1) {
+            //printf("1");
+		text[j]='1';j++; }
+        else{
+//            printf("0"); 
+		text[j]='0';j++; }
+    } 
 	memcpy(dout_gmem + o_idx, (char*) text, BPERDW_512);
 
 	size -= bytes_to_transfer;
@@ -73,7 +167,6 @@ static int process_action(snap_membus_512_t *din_gmem,
     act_reg->Control.Retc = SNAP_RETC_SUCCESS;
     return 0;
 }
-
 //--- TOP LEVEL MODULE -------------------------------------------------
 // snap_membus_512_t is defined in actions/include/hls_snap_1024.H
 // which deals with both 512 and 1024 bits wide busses

@@ -63,49 +63,62 @@ export PATH=$PATH:${SNAP_ROOT}/software/tools:${ACTION_ROOT}/sw
 
 ####HELLOWORLD_512 ##########################################################
 
+#function test_helloworld_512 {
+#    cmd="echo \"Hello world. This is my first CAPI SNAP experience. It's real fun.\" > tin"
+#    echo "cmd: ${cmd}"
+#    eval ${cmd}
+#    cmd="echo \"HELLO WORLD. THIS IS MY FIRST CAPI SNAP EXPERIENCE. IT'S REAL FUN.\" > tCAP"
+#    echo "cmd: ${cmd}"
+#    eval ${cmd}
+#    echo -n "Doing snap_helloworld_512 "
+#    cmd="snap_helloworld_512 -C${snap_card} -i tin -o tout >> snap_helloworld_512.log 2>&1"
+#    eval ${cmd}
+#    if [ $? -ne 0 ]; then
+#	cat snap_helloworld_512.log
+#	echo "cmd: ${cmd}"
+#	echo "failed"
+#	exit 1
+ #   fi
+#    echo "tin is:"
+#    cat tin
+#    echo "tout is:"
+#    cat tout
+#    echo "Checking produced tout vs reference tCAP:"
+#    diff tout tCAP
+#    if [ $? -ne 0 ]; then
+#       echo "cmd: ${cmd}"
+#       echo "failed"
+#       exit 1
+#    fi
+
+#    echo "ok"
+
+#    echo -n "Check results ... "
+#    diff tout tCAP 2>&1 > /dev/null
+#    if [ $? -ne 0 ]; then
+#	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+#	echo "                 TEST FAILED !"
+#	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+#	echo "       Out and expected files are different!"
+#	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+#	exit 1
+ #   fi
+#    echo "ok"
+
+#}
 function test_helloworld_512 {
-    cmd="echo \"Hello world. This is my first CAPI SNAP experience. It's real fun.\" > tin"
+#57.21*63.13
+    cmd="echo \"0100001001111100100001010001111001000010011001001101011100001010\" > tin"
     echo "cmd: ${cmd}"
     eval ${cmd}
-    cmd="echo \"HELLO WORLD. THIS IS MY FIRST CAPI SNAP EXPERIENCE. IT'S REAL FUN.\" > tCAP"
-    echo "cmd: ${cmd}"
+cmd="snap_helloworld_512 -C${snap_card} -i tin -o tout >> snap_helloworld_512.log 2>&1"
     eval ${cmd}
-    echo -n "Doing snap_helloworld_512 "
-    cmd="snap_helloworld_512 -C${snap_card} -i tin -o tout >> snap_helloworld_512.log 2>&1"
-    eval ${cmd}
-    if [ $? -ne 0 ]; then
-	cat snap_helloworld_512.log
-	echo "cmd: ${cmd}"
-	echo "failed"
-	exit 1
-    fi
     echo "tin is:"
     cat tin
     echo "tout is:"
     cat tout
-    echo "Checking produced tout vs reference tCAP:"
-    diff tout tCAP
-    if [ $? -ne 0 ]; then
-       echo "cmd: ${cmd}"
-       echo "failed"
-       exit 1
-    fi
-
-    echo "ok"
-
-    echo -n "Check results ... "
-    diff tout tCAP 2>&1 > /dev/null
-    if [ $? -ne 0 ]; then
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	echo "                 TEST FAILED !"
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	echo "       Out and expected files are different!"
-	echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-	exit 1
-    fi
-    echo "ok"
-
 }
+
 
 rm -f snap_helloworld_512.log
 touch snap_helloworld_512.log
