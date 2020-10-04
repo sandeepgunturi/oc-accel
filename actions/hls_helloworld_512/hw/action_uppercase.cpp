@@ -94,6 +94,7 @@ j++;
 */
 
 	/* Convert lower cases to upper cases byte per byte */
+
    myfloat var;
 	unsigned f = 0, i; 
     for (i = 31; i >= 9; i--) { 
@@ -125,7 +126,10 @@ float num1=var.f;
 //word_t text1;
 
 float num2=var1.f;
-float num = num1*num2;
+float num;
+for(int q=0;q<10000;q++){
+	 num = num1*num2;
+}
 myfloat var2;
 
 var2.f=num;
