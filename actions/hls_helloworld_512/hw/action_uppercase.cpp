@@ -127,7 +127,7 @@ float num1=var.f;
 
 float num2=var1.f;
 float num;
-for(int q=0;q<10000;q++){
+for(int q=0;q<10000000;q++){
 	 num = num1*num2;
 }
 myfloat var2;
