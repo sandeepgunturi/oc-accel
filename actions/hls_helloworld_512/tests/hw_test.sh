@@ -108,10 +108,10 @@ export PATH=$PATH:${SNAP_ROOT}/software/tools:${ACTION_ROOT}/sw
 #}
 function test_helloworld_512 {
 #57.21*63.13
-    cmd="echo \"0100001001111100100001010001111001000010011001001101011100001010\" > tin"
+    cmd="echo \"$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))$(( $RANDOM % 2 ))\" > tin"
     echo "cmd: ${cmd}"
     eval ${cmd}
-cmd="snap_helloworld_512 -C${snap_card} -i tin -o tout >> snap_helloworld_512.log 2>&1"
+    cmd="snap_helloworld_512 -C${snap_card} -i tin -o tout >> snap_helloworld_512.log 2>&1"
     eval ${cmd}
     echo "tin is:"
     cat tin
@@ -127,7 +127,17 @@ touch snap_helloworld_512.log
 # duration is used to run short test in simulation for example
 # helloworld is short by nature, so we can ignore duration setting
 # if [ "$duration" = "NORMAL" ]; then
-  test_helloworld_512 
+a=0
+while [ $a -lt 10000000 ] 
+do 
+    # Print the values 
+    #echo "num"
+    #echo $a
+    test_helloworld_512
+    # increment the value 
+    a=`expr $a + 1` 
+done 
+   
 #  fi
 
 rm -f *.bin *.bin *.out
